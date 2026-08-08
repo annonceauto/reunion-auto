@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import ListingCard from '@/components/ListingCard';
 import Filters from '@/components/Filters';
 import CarteAcheterVendre from '@/components/CarteAcheterVendre';
+import VideoApercu from '@/components/VideoApercu';
 import Link from 'next/link';
 import { communesDansRayon } from '@/lib/communes-reunion';
 
@@ -140,16 +141,8 @@ export default async function Home({
           {/* Bloc de mise en avant de la fonctionnalité vidéo */}
           <div className="mt-10 overflow-hidden rounded-3xl border border-lagon/30 bg-basalte2/60">
             <div className="grid sm:grid-cols-2">
-              <div className="relative aspect-video sm:aspect-auto sm:min-h-[280px]">
-                <video
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                  className="absolute inset-0 h-full w-full object-cover"
-                  src="https://videos.pexels.com/video-files/20693191/20693191-sd_640_360_25fps.mp4"
-                />
+              <div className="relative aspect-video sm:aspect-auto sm:min-h-[280px] bg-black">
+                <VideoApercu />
               </div>
               <div className="flex flex-col justify-center gap-3 p-6 sm:p-8">
                 <span className="w-fit rounded-full bg-lagon/20 px-3 py-1 text-xs font-semibold text-lagon">
