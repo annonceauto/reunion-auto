@@ -5,8 +5,14 @@ import ExempleMedia from './ExempleMedia';
 export const metadata: Metadata = {
   title: 'Exemple d\'annonce',
   description:
-    "Découvre à quoi ressemble une fiche annonce sur Annonce Auto.re, avec photos et vidéo.",
+    "Chaque annonce peut inclure une vidéo : moteur, carrosserie, intérieur. Voici un exemple du rendu sur Annonce Auto.re.",
   robots: { index: false, follow: false },
+  openGraph: {
+    title: "Exemple d'annonce avec vidéo — Annonce Auto.re",
+    description:
+      "Chaque annonce peut inclure une vidéo : moteur, carrosserie, intérieur. Voici un exemple du rendu sur Annonce Auto.re.",
+    images: ['https://images.pexels.com/photos/27138970/pexels-photo-27138970.jpeg'],
+  },
 };
 
 export default function ExempleAnnonce() {
