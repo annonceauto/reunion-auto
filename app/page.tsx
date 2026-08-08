@@ -127,19 +127,48 @@ export default async function Home({
               )}
             </div>
 
-            <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <div className="mt-6">
               <Link
                 href="/comment-ca-marche"
                 className="inline-flex items-center gap-2 rounded-full border border-lagon/40 bg-lagon/10 px-5 py-2.5 text-sm font-semibold text-lagon hover:bg-lagon/20"
               >
                 💡 Comment ça marche, en 3 étapes →
               </Link>
-              <Link
-                href="/exemple"
-                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-basalte2/80 px-5 py-2.5 text-sm font-semibold text-vanille/80 hover:border-lagon"
-              >
-                🎬 Voir un exemple d&apos;annonce →
-              </Link>
+            </div>
+          </div>
+
+          {/* Bloc de mise en avant de la fonctionnalité vidéo */}
+          <div className="mt-10 overflow-hidden rounded-3xl border border-lagon/30 bg-basalte2/60">
+            <div className="grid sm:grid-cols-2">
+              <div className="relative aspect-video sm:aspect-auto sm:min-h-[280px]">
+                <video
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  className="absolute inset-0 h-full w-full object-cover"
+                  src="https://videos.pexels.com/video-files/20693191/20693191-sd_640_360_25fps.mp4"
+                />
+              </div>
+              <div className="flex flex-col justify-center gap-3 p-6 sm:p-8">
+                <span className="w-fit rounded-full bg-lagon/20 px-3 py-1 text-xs font-semibold text-lagon">
+                  🎥 Notre particularité
+                </span>
+                <h2 className="font-display text-xl text-vanille sm:text-2xl">
+                  Chaque annonce peut inclure une vidéo
+                </h2>
+                <p className="text-vanille/60">
+                  Moteur qui tourne, carrosserie sous tous les angles, intérieur... Le vendeur
+                  filme, tu regardes avant de te déplacer.
+                </p>
+                <Link
+                  href="/exemple"
+                  className="mt-2 inline-flex w-fit items-center gap-2 rounded-full bg-lagon px-6 py-3 text-sm font-semibold text-basalte shadow-lg shadow-lagon/20 hover:bg-lagon2"
+                >
+                  🎬 Voir un exemple d&apos;annonce avec vidéo →
+                </Link>
+              </div>
             </div>
           </div>
 
