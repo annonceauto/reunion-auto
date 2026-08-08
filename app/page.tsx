@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
 import ListingCard from '@/components/ListingCard';
 import Filters from '@/components/Filters';
@@ -8,6 +9,10 @@ import { communesDansRayon } from '@/lib/communes-reunion';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
+
+export const metadata: Metadata = {
+  alternates: { canonical: '/' },
+};
 
 export default async function Home({
   searchParams,
