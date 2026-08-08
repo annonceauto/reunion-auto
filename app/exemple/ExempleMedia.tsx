@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const CLIPS = [
   { label: 'Extérieur', src: 'https://videos.pexels.com/video-files/4281225/4281225-sd_640_360_24fps.mp4' },
@@ -17,7 +17,31 @@ const PHOTOS = [
 export default function ExempleMedia() {
   const [indexClip, setIndexClip] = useState(0);
   const [ouverte, setOuverte] = useState<number | null>(null);
+  const [blobUrl, setBlobUrl] = useState<string | null>(null);
+  const [chargement, setChargement] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    let annule = false;
+    let urlCree: string | null = null;
+    setChargement(true);
+    setBlobUrl(null);
+
+    fetch(CLIPS[indexClip].src)
+      .then((r) => r.blob())
+      .then((blob) => {
+        if (annule) return;
+        urlCree = URL.createObjectURL(blob);
+        setBlobUrl(urlCree);
+        setChargement(false);
+      })
+      .catch(() => setChargement(false));
+
+    return () => {
+      annule = true;
+      if (urlCree) URL.revokeObjectURL(urlCree);
+    };
+  }, [indexClip]);
 
   function clipSuivant() {
     setIndexClip((i) => (i + 1) % CLIPS.length);
@@ -26,17 +50,26 @@ export default function ExempleMedia() {
   return (
     <>
       <div className="mb-6 overflow-hidden rounded-2xl border border-white/10 bg-black">
-        <video
-          ref={videoRef}
-          key={CLIPS[indexClip].src}
-          controls
-          preload="metadata"
-          autoPlay
-          muted
-          className="aspect-video w-full"
-          src={CLIPS[indexClip].src}
-          onEnded={clipSuivant}
-        />
+        <div className="relative aspect-video w-full">
+          {chargement && (
+            <div className="absolute inset-0 flex items-center justify-center text-sm text-vanille/40">
+              Chargement de la vidéo…
+            </div>
+          )}
+          {blobUrl && (
+            <video
+              ref={videoRef}
+              key={blobUrl}
+              controls
+              autoPlay
+              muted
+              playsInline
+              className="h-full w-full"
+              src={blobUrl}
+              onEnded={clipSuivant}
+            />
+          )}
+        </div>
       </div>
       <div className="mb-8 -mt-3 flex flex-wrap items-center gap-2 text-xs text-vanille/40">
         <span>Vidéo du vendeur (exemple) :</span>
