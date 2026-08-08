@@ -51,10 +51,10 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     .eq('id', params.id)
     .single();
 
-  if (!listing) return { title: 'Annonce introuvable — Annonce Auto.re' };
+  if (!listing) return { title: 'Annonce introuvable' };
 
   return {
-    title: `${listing.marque} ${listing.modele} ${listing.annee} — ${listing.prix.toLocaleString('fr-FR')} € à ${listing.commune} | Annonce Auto.re`,
+    title: `${listing.marque} ${listing.modele} ${listing.annee} — ${listing.prix.toLocaleString('fr-FR')} € à ${listing.commune}`,
     description: `${listing.marque} ${listing.modele} ${listing.annee} à vendre à ${listing.commune}, La Réunion. Annonce vérifiée avec photos et vidéo.`,
   };
 }
