@@ -127,12 +127,20 @@ export default async function Home({
               )}
             </div>
 
-            <Link
-              href="/comment-ca-marche"
-              className="mt-6 inline-flex items-center gap-2 rounded-full border border-lagon/40 bg-lagon/10 px-5 py-2.5 text-sm font-semibold text-lagon hover:bg-lagon/20"
-            >
-              💡 Comment ça marche, en 3 étapes →
-            </Link>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <Link
+                href="/comment-ca-marche"
+                className="inline-flex items-center gap-2 rounded-full border border-lagon/40 bg-lagon/10 px-5 py-2.5 text-sm font-semibold text-lagon hover:bg-lagon/20"
+              >
+                💡 Comment ça marche, en 3 étapes →
+              </Link>
+              <Link
+                href="/exemple"
+                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-basalte2/80 px-5 py-2.5 text-sm font-semibold text-vanille/80 hover:border-lagon"
+              >
+                🎬 Voir un exemple d&apos;annonce →
+              </Link>
+            </div>
           </div>
 
           <div className="mt-10">
