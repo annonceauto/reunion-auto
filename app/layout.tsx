@@ -44,6 +44,7 @@ export const metadata: Metadata = {
     description: "Achetez et vendez des véhicules à La Réunion, avec vidéo.",
   },
   robots: { index: true, follow: true },
+  alternates: { canonical: '/' },
   verification: {
     google: 'kxcETuUM0TwaUUHi6T1L4TBtK8Uo63GOCPZk8IOZaps',
   },
