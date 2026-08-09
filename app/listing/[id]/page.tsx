@@ -153,15 +153,53 @@ export default async function ListingDetail({ params }: { params: { id: string }
       />
       <CompteurVues listingId={listing.id} />
 
-      {listing.video_path && (
-        <div className="mb-6 overflow-hidden rounded-2xl border border-white/10 bg-black">
-          <video
-            controls
-            preload="metadata"
-            className="aspect-video w-full"
-            src={urlFichier('videos', listing.video_path)}
-          />
+      {(listing.video_carrosserie_path || listing.video_interieur_path || listing.video_moteur_path) ? (
+        <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
+          {listing.video_carrosserie_path && (
+            <div className="overflow-hidden rounded-2xl border border-white/10 bg-black">
+              <p className="bg-basalte2 px-3 py-1.5 text-xs text-vanille/60">Carrosserie</p>
+              <video
+                controls
+                preload="metadata"
+                className="aspect-video w-full"
+                src={urlFichier('videos', listing.video_carrosserie_path)}
+              />
+            </div>
+          )}
+          {listing.video_interieur_path && (
+            <div className="overflow-hidden rounded-2xl border border-white/10 bg-black">
+              <p className="bg-basalte2 px-3 py-1.5 text-xs text-vanille/60">Intérieur</p>
+              <video
+                controls
+                preload="metadata"
+                className="aspect-video w-full"
+                src={urlFichier('videos', listing.video_interieur_path)}
+              />
+            </div>
+          )}
+          {listing.video_moteur_path && (
+            <div className="overflow-hidden rounded-2xl border border-white/10 bg-black">
+              <p className="bg-basalte2 px-3 py-1.5 text-xs text-vanille/60">Moteur</p>
+              <video
+                controls
+                preload="metadata"
+                className="aspect-video w-full"
+                src={urlFichier('videos', listing.video_moteur_path)}
+              />
+            </div>
+          )}
         </div>
+      ) : (
+        listing.video_path && (
+          <div className="mb-6 overflow-hidden rounded-2xl border border-white/10 bg-black">
+            <video
+              controls
+              preload="metadata"
+              className="aspect-video w-full"
+              src={urlFichier('videos', listing.video_path)}
+            />
+          </div>
+        )
       )}
 
       {urlsPhotos.length > 0 && <GaleriePhotos urls={urlsPhotos} alt={altPhoto} />}
