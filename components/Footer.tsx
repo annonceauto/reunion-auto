@@ -12,6 +12,9 @@ export default function Footer() {
           <Link href="/vendre-voiture-reunion" className="hover:text-vanille">
             Guide : vendre sa voiture
           </Link>
+          <Link href="/acheter-voiture-reunion" className="hover:text-vanille">
+            Guide : acheter sa voiture
+          </Link>
           <Link href="/contact" className="hover:text-vanille">
             Contact & FAQ
           </Link>
