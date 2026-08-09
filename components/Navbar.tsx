@@ -78,12 +78,18 @@ export default function Navbar() {
                   >
                     Mes favoris
                   </Link>
-                  <span className="block cursor-not-allowed rounded-xl px-3 py-2 text-sm text-vanille/30">
-                    Mes recherches (bientôt)
-                  </span>
-                  <span className="block cursor-not-allowed rounded-xl px-3 py-2 text-sm text-vanille/30">
-                    Mes alertes (bientôt)
-                  </span>
+                  <Link
+                    href="/mes-recherches"
+                    className="block rounded-xl px-3 py-2 text-sm text-vanille/80 hover:bg-white/5 hover:text-vanille"
+                  >
+                    Mes recherches
+                  </Link>
+                  <Link
+                    href="/mes-alertes"
+                    className="block rounded-xl px-3 py-2 text-sm text-vanille/80 hover:bg-white/5 hover:text-vanille"
+                  >
+                    Mes alertes
+                  </Link>
                   <Link
                     href="/mon-profil"
                     className="block rounded-xl px-3 py-2 text-sm text-vanille/80 hover:bg-white/5 hover:text-vanille"
