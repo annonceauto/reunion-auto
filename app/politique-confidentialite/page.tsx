@@ -39,8 +39,8 @@ export default function PolitiqueConfidentialite() {
       <p className="mt-2 text-sm">
         Conformément au RGPD, tu peux à tout moment demander l&apos;accès, la rectification ou la
         suppression de tes données personnelles, en écrivant à{' '}
-        <a href="mailto:mamabully2705@gmail.com" className="text-lagon underline">
-          mamabully2705@gmail.com
+        <a href="mailto:annonceauto.re@gmail.com" className="text-lagon underline">
+          annonceauto.re@gmail.com
         </a>
         . Tu peux aussi supprimer toi-même tes annonces depuis &quot;Mes annonces&quot;.
       </p>
