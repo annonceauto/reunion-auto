@@ -21,6 +21,7 @@ export default async function Home({
     q?: string; commune?: string; cp?: string; video?: string; tri?: string;
     prixmin?: string; prixmax?: string; kmmax?: string; pieces?: string;
     lat?: string; lng?: string; rayon?: string;
+    annee?: string; carburant?: string; boite?: string;
   };
 }) {
   const supabase = createClient();
@@ -82,6 +83,15 @@ export default async function Home({
   if (searchParams.kmmax) {
     query = query.lte('kilometrage', Number(searchParams.kmmax));
   }
+  if (searchParams.annee) {
+    query = query.eq('annee', Number(searchParams.annee));
+  }
+  if (searchParams.carburant) {
+    query = query.eq('carburant', searchParams.carburant);
+  }
+  if (searchParams.boite) {
+    query = query.eq('boite', searchParams.boite);
+  }
 
   if (searchParams.tri === 'prix_asc') {
     query = query.order('boost', { ascending: false }).order('prix', { ascending: true });
@@ -92,9 +102,6 @@ export default async function Home({
   }
 
   const { data: listings } = await query;
-  const { count: nombreUtilisateurs } = await supabase
-    .from('profiles')
-    .select('id', { count: 'exact', head: true });
 
   return (
     <div>
@@ -121,16 +128,11 @@ export default async function Home({
 
             <div className="mt-6 flex flex-wrap justify-center gap-3 text-xs sm:text-sm">
               <span className="flex items-center gap-2 rounded-full border border-white/10 bg-basalte2/80 px-4 py-2 text-vanille/70">
-                <span className="text-lagon">✓</span> Annonces vérifiées avant publication
+                <span className="text-lagon">✓</span> Annonces contrôlées avant publication
               </span>
               <span className="flex items-center gap-2 rounded-full border border-white/10 bg-basalte2/80 px-4 py-2 text-vanille/70">
                 <span className="text-lagon">✓</span> Paiement 100 % sécurisé (Stripe)
               </span>
-              {!!nombreUtilisateurs && nombreUtilisateurs > 0 && (
-                <span className="flex items-center gap-2 rounded-full border border-white/10 bg-basalte2/80 px-4 py-2 text-vanille/70">
-                  <span className="text-lagon">👥</span> {nombreUtilisateurs} inscrits sur le site
-                </span>
-              )}
             </div>
 
             <div className="mt-6">
