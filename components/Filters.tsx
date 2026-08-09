@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
 import { MARQUES, MODELES_PAR_MARQUE } from '@/lib/marques-modeles';
 import { trouverCommuneParLocalite, LOCALITES_REUNION } from '@/lib/localites-reunion';
 import ChampAutocomplete from './ChampAutocomplete';
@@ -69,6 +70,25 @@ export default function Filters() {
 
   const [rayon, setRayon] = useState(params.get('rayon') ?? '25');
   const [localisation, setLocalisation] = useState('');
+
+  const [annees, setAnnees] = useState<number[]>([]);
+  const [carburants, setCarburants] = useState<string[]>([]);
+  const [boites, setBoites] = useState<string[]>([]);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase
+      .from('listings')
+      .select('annee, carburant, boite')
+      .eq('statut', 'en_ligne')
+      .eq('moderation_statut', 'valide')
+      .then(({ data }) => {
+        if (!data) return;
+        setAnnees(Array.from(new Set(data.map((d) => d.annee).filter(Boolean))).sort((a, b) => b - a));
+        setCarburants(Array.from(new Set(data.map((d) => d.carburant).filter(Boolean))).sort());
+        setBoites(Array.from(new Set(data.map((d) => d.boite).filter(Boolean))).sort());
+      });
+  }, []);
 
   function autourDeMoi() {
     setLocalisation('Recherche de ta position...');
@@ -215,6 +235,39 @@ export default function Filters() {
         <option value="">Km max</option>
         {KM_MAX_OPTIONS.map((k) => (
           <option key={k} value={k}>jusqu&apos;à {k.toLocaleString('fr-FR')} km</option>
+        ))}
+      </select>
+
+      <select
+        defaultValue={params.get('annee') ?? ''}
+        onChange={(e) => majFiltre('annee', e.target.value)}
+        className="rounded-full border border-white/10 bg-basalte px-4 py-2 text-sm text-vanille"
+      >
+        <option value="">Année</option>
+        {annees.map((a) => (
+          <option key={a} value={a}>{a}</option>
+        ))}
+      </select>
+
+      <select
+        defaultValue={params.get('carburant') ?? ''}
+        onChange={(e) => majFiltre('carburant', e.target.value)}
+        className="rounded-full border border-white/10 bg-basalte px-4 py-2 text-sm text-vanille"
+      >
+        <option value="">Carburant</option>
+        {carburants.map((c) => (
+          <option key={c} value={c}>{c}</option>
+        ))}
+      </select>
+
+      <select
+        defaultValue={params.get('boite') ?? ''}
+        onChange={(e) => majFiltre('boite', e.target.value)}
+        className="rounded-full border border-white/10 bg-basalte px-4 py-2 text-sm text-vanille"
+      >
+        <option value="">Boîte</option>
+        {boites.map((b) => (
+          <option key={b} value={b}>{b}</option>
         ))}
       </select>
 
