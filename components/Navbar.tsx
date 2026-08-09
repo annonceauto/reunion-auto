@@ -47,7 +47,7 @@ export default function Navbar() {
         <nav className="flex flex-wrap items-center justify-end gap-2 sm:gap-3">
           <Link
             href="/comment-ca-marche"
-            className="hidden text-sm text-vanille/70 hover:text-vanille md:block"
+            className="text-sm text-vanille/70 hover:text-vanille"
           >
             Comment ça marche
           </Link>
@@ -61,7 +61,7 @@ export default function Navbar() {
                   🔔 Modération {aValider > 0 && `(${aValider})`}
                 </Link>
               )}
-              <details className="group relative hidden sm:block">
+              <details className="group relative">
                 <summary className="cursor-pointer list-none text-sm text-vanille/70 hover:text-vanille">
                   Mon compte ▾
                 </summary>
