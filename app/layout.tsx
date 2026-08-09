@@ -6,6 +6,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ServiceWorkerRegister from '@/components/ServiceWorkerRegister';
 import InstallAppBanner from '@/components/InstallAppBanner';
+import Notifications from '@/components/Notifications';
 
 const archivoBlack = Archivo_Black({
   subsets: ['latin'],
@@ -104,7 +105,12 @@ export default function RootLayout({
         />
         <ServiceWorkerRegister />
         <Navbar />
-        <main className="min-h-screen">{children}</main>
+        <main className="min-h-screen">
+          <div className="mx-auto max-w-6xl px-5 pt-4">
+            <Notifications />
+          </div>
+          {children}
+        </main>
         <Footer />
         <InstallAppBanner />
         <Analytics />
