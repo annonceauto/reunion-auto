@@ -184,6 +184,12 @@ function FormulaireCreerAnnonce() {
       return;
     }
 
+    if (!telephoneCompte.trim()) {
+            setErreur("Merci de renseigner un numéro de téléphone : c'est le seul moyen pour un acheteur intéressé de te contacter.");
+            setEnvoi(false);
+            return;
+    }
+    
     if (!certifieExact) {
       setErreur("Merci de cocher la case de certification en bas du formulaire avant de publier.");
       setEnvoi(false);
@@ -202,6 +208,10 @@ function FormulaireCreerAnnonce() {
         .select('annonce_gratuite_utilisee, compte_illimite, type_vendeur, telephone')
         .eq('id', userId)
         .single();
+
+            if (profil?.telephone !== telephoneCompte.trim()) {
+                      await supabase.from('profiles').update({ telephone: telephoneCompte.trim() }).eq('id', userId);
+            }
 
       const compteIllimiteActuel = userData.user.email === EMAIL_ADMIN || !!profil?.compte_illimite;
       const estPro = profil?.type_vendeur === 'professionnel';
@@ -498,6 +508,21 @@ function FormulaireCreerAnnonce() {
             </select>
           </div>
         </div>
+
+                <div>
+                          <label className="mb-2 block text-sm font-medium text-vanille">Téléphone de contact *</label>
+                          <p className="mb-2 text-xs text-vanille/50">
+                                      Obligatoire : c'est le seul moyen pour un acheteur intéressé de te contacter directement.
+                          </p>
+                          <input
+                                        type="tel"
+                                        placeholder="Ex : 0692 12 34 56"
+                                        value={telephoneCompte}
+                                        onChange={(e) => setTelephoneCompte(e.target.value)}
+                                        required
+                                        className="w-full rounded-xl border border-white/10 bg-basalte2 px-4 py-3 text-vanille placeholder:text-vanille/40 focus:border-lagon"
+                                      />
+                </div>
 
         <div>
           <label className="mb-2 block text-sm font-medium text-vanille">Description *</label>
