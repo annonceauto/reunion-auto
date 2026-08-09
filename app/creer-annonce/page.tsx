@@ -79,7 +79,9 @@ function FormulaireCreerAnnonce() {
   const [boostSouhaite, setBoostSouhaite] = useState(false);
   const [modeDepot, setModeDepot] = useState<'sans_video' | 'avec_video'>('sans_video');
   const [photos, setPhotos] = useState<File[]>([]);
-  const [video, setVideo] = useState<File | null>(null);
+  const [videoCarrosserie, setVideoCarrosserie] = useState<File | null>(null);
+  const [videoInterieur, setVideoInterieur] = useState<File | null>(null);
+  const [videoMoteur, setVideoMoteur] = useState<File | null>(null);
   const [controleTechnique, setControleTechnique] = useState('');
   const [documentCT, setDocumentCT] = useState<File | null>(null);
   const [pourPieces, setPourPieces] = useState(false);
@@ -101,7 +103,9 @@ function FormulaireCreerAnnonce() {
     if (mode === 'avec_video') {
       setPhotos((p) => p.slice(0, MAX_PHOTOS_AVEC_VIDEO));
     } else {
-      setVideo(null);
+      setVideoCarrosserie(null);
+      setVideoInterieur(null);
+      setVideoMoteur(null);
     }
   }
 
@@ -202,6 +206,12 @@ function FormulaireCreerAnnonce() {
       return;
     }
 
+    if (modeDepot === 'avec_video' && (!videoCarrosserie || !videoInterieur || !videoMoteur)) {
+      setErreur('En mode "Avec vidéo", les 3 plans (carrosserie, intérieur, moteur) sont obligatoires.');
+      setEnvoi(false);
+      return;
+    }
+
     try {
       const { data: profil } = await supabase
         .from('profiles')
@@ -274,10 +284,24 @@ function FormulaireCreerAnnonce() {
         cheminsPhotos.push(chemin);
       }
 
-      let cheminVideo: string | null = null;
-      if (video) {
-        cheminVideo = `${userId}/${Date.now()}-${video.name}`;
-        const { error } = await supabase.storage.from('videos').upload(cheminVideo, video);
+      let cheminVideoCarrosserie: string | null = null;
+      if (videoCarrosserie) {
+        cheminVideoCarrosserie = `${userId}/${Date.now()}-carrosserie-${videoCarrosserie.name}`;
+        const { error } = await supabase.storage.from('videos').upload(cheminVideoCarrosserie, videoCarrosserie);
+        if (error) throw error;
+      }
+
+      let cheminVideoInterieur: string | null = null;
+      if (videoInterieur) {
+        cheminVideoInterieur = `${userId}/${Date.now()}-interieur-${videoInterieur.name}`;
+        const { error } = await supabase.storage.from('videos').upload(cheminVideoInterieur, videoInterieur);
+        if (error) throw error;
+      }
+
+      let cheminVideoMoteur: string | null = null;
+      if (videoMoteur) {
+        cheminVideoMoteur = `${userId}/${Date.now()}-moteur-${videoMoteur.name}`;
+        const { error } = await supabase.storage.from('videos').upload(cheminVideoMoteur, videoMoteur);
         if (error) throw error;
       }
 
@@ -307,7 +331,10 @@ function FormulaireCreerAnnonce() {
           commune: communeSansCP(form.commune),
           description: form.description,
           photos: cheminsPhotos,
-          video_path: cheminVideo,
+          video_path: cheminVideoCarrosserie,
+          video_carrosserie_path: cheminVideoCarrosserie,
+          video_interieur_path: cheminVideoInterieur,
+          video_moteur_path: cheminVideoMoteur,
           controle_technique: controleTechnique,
           document_ct_path: cheminDocumentCT,
           pour_pieces: pourPieces,
@@ -602,8 +629,28 @@ function FormulaireCreerAnnonce() {
           </div>
 
           {modeDepot === 'avec_video' && (
-            <div className="mt-4">
-              <VideoUploader onFichierValide={setVideo} />
+            <div className="mt-4 flex flex-col gap-4">
+              <p className="text-xs text-vanille/50">
+                3 plans obligatoires, 20 secondes maximum chacun (fichiers plus légers).
+              </p>
+              <VideoUploader
+                onFichierValide={setVideoCarrosserie}
+                label="Plan 1 : la carrosserie *"
+                description="20 secondes max. Fais le tour du véhicule."
+                dureeMaxS={20}
+              />
+              <VideoUploader
+                onFichierValide={setVideoInterieur}
+                label="Plan 2 : l'intérieur *"
+                description="20 secondes max. Sièges, tableau de bord, compteur."
+                dureeMaxS={20}
+              />
+              <VideoUploader
+                onFichierValide={setVideoMoteur}
+                label="Plan 3 : le moteur *"
+                description="20 secondes max. Capot ouvert, moteur qui tourne si possible."
+                dureeMaxS={20}
+              />
             </div>
           )}
         </div>
