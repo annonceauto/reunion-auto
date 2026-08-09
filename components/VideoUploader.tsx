@@ -2,13 +2,21 @@
 
 import { useRef, useState } from 'react';
 
-const TAILLE_MAX_MO = 60;
-const DUREE_MAX_S = 60;
+const TAILLE_MAX_MO_DEFAUT = 60;
+const DUREE_MAX_S_DEFAUT = 60;
 
 export default function VideoUploader({
   onFichierValide,
+  label = 'Vidéo courte du véhicule (recommandé)',
+  description,
+  dureeMaxS = DUREE_MAX_S_DEFAUT,
+  tailleMaxMo = TAILLE_MAX_MO_DEFAUT,
 }: {
   onFichierValide: (fichier: File | null) => void;
+  label?: string;
+  description?: string;
+  dureeMaxS?: number;
+  tailleMaxMo?: number;
 }) {
   const [erreur, setErreur] = useState('');
   const [nomFichier, setNomFichier] = useState('');
@@ -17,8 +25,8 @@ export default function VideoUploader({
   function verifierEtCharger(fichier: File) {
     setErreur('');
 
-    if (fichier.size > TAILLE_MAX_MO * 1024 * 1024) {
-      setErreur(`Vidéo trop lourde (max ${TAILLE_MAX_MO} Mo). Filme en qualité standard plutôt qu'en 4K.`);
+    if (fichier.size > tailleMaxMo * 1024 * 1024) {
+      setErreur(`Vidéo trop lourde (max ${tailleMaxMo} Mo). Filme en qualité standard plutôt qu'en 4K.`);
       onFichierValide(null);
       return;
     }
@@ -27,8 +35,8 @@ export default function VideoUploader({
     video.preload = 'metadata';
     video.onloadedmetadata = () => {
       window.URL.revokeObjectURL(video.src);
-      if (video.duration > DUREE_MAX_S) {
-        setErreur(`Vidéo trop longue (max ${DUREE_MAX_S} secondes). Garde le meilleur passage.`);
+      if (video.duration > dureeMaxS) {
+        setErreur(`Vidéo trop longue (max ${dureeMaxS} secondes). Garde le meilleur passage.`);
         onFichierValide(null);
       } else {
         setNomFichier(fichier.name);
@@ -41,10 +49,10 @@ export default function VideoUploader({
   return (
     <div>
       <label className="mb-1 block text-sm font-medium text-vanille">
-        Vidéo courte du véhicule (recommandé)
+        {label}
       </label>
       <p className="mb-3 text-xs text-vanille/50">
-        60 secondes max, 60 Mo max. Montre le démarrage moteur, les 4 côtés de la carrosserie et l'intérieur.
+        {description ?? `${dureeMaxS} secondes max, ${tailleMaxMo} Mo max.`}
       </p>
 
       <button
