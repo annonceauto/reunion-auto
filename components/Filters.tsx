@@ -40,6 +40,14 @@ const PRIX_MIN_OPTIONS = [1000, 3000, 5000, 8000, 12000, 18000, 25000];
 const PRIX_MAX_OPTIONS = [3000, 5000, 8000, 12000, 18000, 25000, 40000, 60000];
 const KM_MAX_OPTIONS = [10000, 30000, 50000, 80000, 100000, 150000, 200000];
 
+function normaliser(s: string) {
+  return s
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim();
+}
+
 export default function Filters() {
   const router = useRouter();
   const params = useSearchParams();
@@ -60,13 +68,16 @@ export default function Filters() {
 
   const matchParenthese = villeSaisie.trim().match(/^(.+?)\s*\((\d{5})\)$/);
   const localiteCorrespondante = trouverCommuneParLocalite(villeSaisie);
+  const villeSaisieNorm = normaliser(villeSaisie);
   const communeCorrespondante = matchParenthese
     ? COMMUNES.find((c) => c.cp === matchParenthese[2])
     : localiteCorrespondante
       ? COMMUNES.find((c) => c.ville === localiteCorrespondante.commune)
-      : COMMUNES.find(
-          (c) => c.cp === villeSaisie.trim() || c.ville.toLowerCase() === villeSaisie.trim().toLowerCase()
-        );
+      : COMMUNES.find((c) => c.cp === villeSaisie.trim()) ||
+        COMMUNES.find((c) => normaliser(c.ville) === villeSaisieNorm) ||
+        (villeSaisieNorm.length >= 3
+          ? COMMUNES.find((c) => normaliser(c.ville).includes(villeSaisieNorm))
+          : undefined);
 
   const [rayon, setRayon] = useState(params.get('rayon') ?? '25');
   const [localisation, setLocalisation] = useState('');
