@@ -19,7 +19,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://reunion-auto.vercel.app'),
+  metadataBase: new URL('https://annonce-auto.re'),
   title: {
     default: 'Annonce Auto.re — Annonces de véhicules avec vidéo à La Réunion',
     template: '%s | Annonce Auto.re',
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Annonce Auto.re — Annonces de véhicules avec vidéo à La Réunion',
     description: "Achetez et vendez des véhicules à La Réunion, avec vidéo pour éviter les mauvaises surprises.",
-    url: 'https://reunion-auto.vercel.app',
+    url: 'https://annonce-auto.re',
     siteName: 'Annonce Auto.re',
     locale: 'fr_FR',
     type: 'website',
@@ -65,7 +65,7 @@ const jsonLdOrganisation = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: 'Annonce Auto.re',
-  url: 'https://reunion-auto.vercel.app',
+  url: 'https://annonce-auto.re',
   description:
     "Site d'annonces de véhicules d'occasion à La Réunion, avec vidéo vérifiée pour chaque annonce.",
   areaServed: {
@@ -78,10 +78,10 @@ const jsonLdSiteWeb = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: 'Annonce Auto.re',
-  url: 'https://reunion-auto.vercel.app',
+  url: 'https://annonce-auto.re',
   potentialAction: {
     '@type': 'SearchAction',
-    target: 'https://reunion-auto.vercel.app/?q={search_term_string}',
+    target: 'https://annonce-auto.re/?q={search_term_string}',
     'query-input': 'required name=search_term_string',
   },
 };
