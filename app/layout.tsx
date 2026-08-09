@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/react';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import ServiceWorkerRegister from '@/components/ServiceWorkerRegister';
 
 const archivoBlack = Archivo_Black({
   subsets: ['latin'],
@@ -30,6 +31,16 @@ export const metadata: Metadata = {
   ],
   manifest: '/manifest.json',
   themeColor: '#15181A',
+  icons: {
+    icon: '/icone-192.png',
+    shortcut: '/icone-192.png',
+    apple: '/icone-192.png',
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'AnnonceAuto',
+  },
   openGraph: {
     title: 'Annonce Auto.re — Annonces de véhicules avec vidéo à La Réunion',
     description: "Achetez et vendez des véhicules à La Réunion, avec vidéo pour éviter les mauvaises surprises.",
@@ -45,7 +56,7 @@ export const metadata: Metadata = {
   },
   robots: { index: true, follow: true },
   verification: {
-    google: 'kxcETuUM0TwaUUHi6T1L4TBtK8Uo63GOCPZk8IOZaps',
+    google: 'iTryvBeG2W_VM6hKr5fEA4oWkzVEQ8UOJ-sIyJHudZg',
   },
 };
 
@@ -90,6 +101,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdSiteWeb) }}
         />
+        <ServiceWorkerRegister />
         <Navbar />
         <main className="min-h-screen">{children}</main>
         <Footer />
