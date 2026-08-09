@@ -55,7 +55,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 
   return {
     title: `${listing.marque} ${listing.modele} ${listing.annee} — ${listing.prix.toLocaleString('fr-FR')} € à ${listing.commune}`,
-    description: `${listing.marque} ${listing.modele} ${listing.annee} à vendre à ${listing.commune}, La Réunion. Annonce vérifiée avec photos et vidéo.`,
+    description: `${listing.marque} ${listing.modele} ${listing.annee} à vendre à ${listing.commune}, La Réunion. Annonce contrôlée avec photos et vidéo.`,
     alternates: { canonical: `/listing/${params.id}` },
   };
 }
