@@ -631,13 +631,13 @@ function FormulaireCreerAnnonce() {
           {modeDepot === 'avec_video' && (
             <div className="mt-4 flex flex-col gap-4">
               <p className="text-xs text-vanille/50">
-                3 plans obligatoires, 20 secondes maximum chacun (fichiers plus légers).
+                3 plans obligatoires : carrosserie (30s max), intérieur (20s max), moteur (10s max). Impossible de dépasser ces limites (fichiers plus légers).
               </p>
               <VideoUploader
                 onFichierValide={setVideoCarrosserie}
                 label="Plan 1 : la carrosserie *"
-                description="20 secondes max. Fais le tour du véhicule."
-                dureeMaxS={20}
+                description="30 secondes max. Fais le tour du véhicule."
+                dureeMaxS={30}
               />
               <VideoUploader
                 onFichierValide={setVideoInterieur}
@@ -647,9 +647,9 @@ function FormulaireCreerAnnonce() {
               />
               <VideoUploader
                 onFichierValide={setVideoMoteur}
-                label="Plan 3 : le moteur *"
-                description="20 secondes max. Capot ouvert, moteur qui tourne si possible."
-                dureeMaxS={20}
+                label="Plan 3 : le moteur (moteur qui tourne) *"
+                description="10 secondes max. Capot ouvert, moteur qui tourne si possible."
+                dureeMaxS={10}
               />
             </div>
           )}
