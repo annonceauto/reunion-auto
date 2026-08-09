@@ -120,6 +120,15 @@ export default function Filters() {
     router.push(`/?${next.toString()}`);
   }
 
+  async function enregistrerRecherche(criteres: Record<string, string>) {
+    const nettoye = Object.fromEntries(Object.entries(criteres).filter(([, v]) => v));
+    if (Object.keys(nettoye).length === 0) return;
+    const supabase = createClient();
+    const { data } = await supabase.auth.getUser();
+    if (!data.user) return;
+    await supabase.from('recherches').insert({ user_id: data.user.id, criteres: nettoye });
+  }
+
   function lancerRecherche(e?: React.FormEvent) {
     e?.preventDefault();
     const next = new URLSearchParams(params.toString());
@@ -129,6 +138,9 @@ export default function Filters() {
     next.delete('cp');
     if (communeCorrespondante) next.set('commune', communeCorrespondante.ville);
     else next.delete('commune');
+    const criteres: Record<string, string> = {};
+    next.forEach((valeur, cle) => { criteres[cle] = valeur; });
+    enregistrerRecherche(criteres);
     router.push(`/?${next.toString()}`);
   }
 
