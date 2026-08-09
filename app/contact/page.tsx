@@ -29,8 +29,8 @@ export default function Contact() {
         <h2 className="font-display text-lg text-vanille">Une question, un souci ?</h2>
         <p className="mt-2 text-sm">
           Écris-nous à{' '}
-          <a href="mailto:mamabully2705@gmail.com" className="text-lagon underline">
-            mamabully2705@gmail.com
+          <a href="mailto:annonceauto.re@gmail.com" className="text-lagon underline">
+            annonceauto.re@gmail.com
           </a>{' '}
           — on te répond au plus vite.
         </p>
