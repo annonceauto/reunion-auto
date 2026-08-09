@@ -61,30 +61,43 @@ export default function Navbar() {
                   🔔 Modération {aValider > 0 && `(${aValider})`}
                 </Link>
               )}
-              <Link
-                href="/mes-favoris"
-                className="hidden text-sm text-vanille/70 hover:text-vanille sm:block"
-              >
-                Favoris
-              </Link>
-              <Link
-                href="/mon-profil"
-                className="hidden text-sm text-vanille/70 hover:text-vanille sm:block"
-              >
-                Mon profil
-              </Link>
-              <Link
-                href="/mon-solde"
-                className="hidden text-sm text-vanille/70 hover:text-vanille sm:block"
-              >
-                Mon solde
-              </Link>
-              <Link
-                href="/mes-annonces"
-                className="hidden text-sm text-vanille/80 hover:text-vanille sm:block"
-              >
-                Mes annonces
-              </Link>
+              <details className="group relative hidden sm:block">
+                <summary className="cursor-pointer list-none text-sm text-vanille/70 hover:text-vanille">
+                  Mon compte ▾
+                </summary>
+                <div className="absolute right-0 z-50 mt-2 w-56 rounded-2xl border border-white/10 bg-basalte2 p-2 shadow-lg shadow-black/30">
+                  <Link
+                    href="/mes-annonces"
+                    className="block rounded-xl px-3 py-2 text-sm text-vanille/80 hover:bg-white/5 hover:text-vanille"
+                  >
+                    Mes annonces
+                  </Link>
+                  <Link
+                    href="/mes-favoris"
+                    className="block rounded-xl px-3 py-2 text-sm text-vanille/80 hover:bg-white/5 hover:text-vanille"
+                  >
+                    Mes favoris
+                  </Link>
+                  <span className="block cursor-not-allowed rounded-xl px-3 py-2 text-sm text-vanille/30">
+                    Mes recherches (bientôt)
+                  </span>
+                  <span className="block cursor-not-allowed rounded-xl px-3 py-2 text-sm text-vanille/30">
+                    Mes alertes (bientôt)
+                  </span>
+                  <Link
+                    href="/mon-profil"
+                    className="block rounded-xl px-3 py-2 text-sm text-vanille/80 hover:bg-white/5 hover:text-vanille"
+                  >
+                    Mon profil
+                  </Link>
+                  <Link
+                    href="/mon-solde"
+                    className="block rounded-xl px-3 py-2 text-sm text-vanille/80 hover:bg-white/5 hover:text-vanille"
+                  >
+                    Mon solde
+                  </Link>
+                </div>
+              </details>
               <Link
                 href="/creer-annonce"
                 className="rounded-full bg-fournaise px-4 py-2 text-sm font-semibold text-vanille transition hover:bg-fournaise/90"
