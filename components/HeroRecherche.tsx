@@ -24,6 +24,14 @@ const COMMUNES_HERO = [
   { ville: 'La Possession', cp: '97419' }, { ville: 'Le Port', cp: '97420' },
 ];
 
+function normaliser(s: string) {
+  return s
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim();
+}
+
 export default function HeroRecherche() {
   const router = useRouter();
   const [onglet, setOnglet] = useState<'acheter' | 'vendre'>('acheter');
@@ -52,7 +60,10 @@ export default function HeroRecherche() {
         else params.set('cp', saisie);
       }
     } else if (saisie) {
-      const villeTrouvee = COMMUNES_HERO.find((c) => c.ville.toLowerCase() === saisie.toLowerCase());
+      const saisieNorm = normaliser(saisie);
+      const villeTrouvee =
+        COMMUNES_HERO.find((c) => normaliser(c.ville) === saisieNorm) ||
+        COMMUNES_HERO.find((c) => normaliser(c.ville).includes(saisieNorm) || saisieNorm.includes(normaliser(c.ville)));
       const localite = trouverCommuneParLocalite(saisie);
       if (villeTrouvee) {
         params.set('commune', villeTrouvee.ville);
