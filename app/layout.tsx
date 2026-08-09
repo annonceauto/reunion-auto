@@ -5,6 +5,7 @@ import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ServiceWorkerRegister from '@/components/ServiceWorkerRegister';
+import InstallAppBanner from '@/components/InstallAppBanner';
 
 const archivoBlack = Archivo_Black({
   subsets: ['latin'],
@@ -105,6 +106,7 @@ export default function RootLayout({
         <Navbar />
         <main className="min-h-screen">{children}</main>
         <Footer />
+        <InstallAppBanner />
         <Analytics />
       </body>
     </html>
