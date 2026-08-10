@@ -9,6 +9,9 @@ export default function Footer() {
           <Link href="/comment-ca-marche" className="hover:text-vanille">
             Comment ça marche
           </Link>
+          <Link href="/voiture-occasion" className="hover:text-vanille">
+            Voitures par ville
+          </Link>
           <Link href="/vendre-voiture-reunion" className="hover:text-vanille">
             Guide : vendre sa voiture
           </Link>
