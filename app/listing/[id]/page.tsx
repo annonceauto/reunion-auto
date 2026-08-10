@@ -145,12 +145,35 @@ export default async function ListingDetail({ params }: { params: { id: string }
     },
   };
 
+
+  const segmentsVideo: { path: string; label: string }[] = [];
+  if (listing.video_carrosserie_path) segmentsVideo.push({ path: listing.video_carrosserie_path, label: 'Carrosserie' });
+  if (listing.video_interieur_path) segmentsVideo.push({ path: listing.video_interieur_path, label: 'Intérieur' });
+  if (listing.video_moteur_path) segmentsVideo.push({ path: listing.video_moteur_path, label: 'Moteur' });
+  if (segmentsVideo.length === 0 && listing.video_path) segmentsVideo.push({ path: listing.video_path, label: 'Vidéo' });
+
+  const videosJsonLd = segmentsVideo.map((s) => ({
+    '@context': 'https://schema.org',
+    '@type': 'VideoObject',
+    name: `${listing.marque} ${listing.modele} ${listing.annee} — ${s.label}`,
+    description: `Vidéo ${s.label.toLowerCase()} de cette ${listing.marque} ${listing.modele} ${listing.annee} à vendre à ${listing.commune}, La Réunion, sur Annonce Auto.re.`,
+    thumbnailUrl: urlsPhotos.length > 0 ? urlsPhotos : [urlFichier('videos', s.path)],
+    uploadDate: listing.created_at,
+    contentUrl: urlFichier('videos', s.path),
+  }));
   return (
     <div className="mx-auto max-w-4xl px-5 py-10">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      {videosJsonLd.map((v, i) => (
+        <script
+          key={`video-jsonld-${i}`}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(v) }}
+        />
+      ))}
       <CompteurVues listingId={listing.id} />
 
       {(listing.video_carrosserie_path || listing.video_interieur_path || listing.video_moteur_path) ? (
