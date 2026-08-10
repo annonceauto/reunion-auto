@@ -43,3 +43,16 @@ export function distanceKm(lat1: number, lng1: number, lat2: number, lng2: numbe
 export function communesDansRayon(lat: number, lng: number, rayonKm: number) {
   return COMMUNES_COORDS.filter((c) => distanceKm(lat, lng, c.lat, c.lng) <= rayonKm).map((c) => c.ville);
 }
+
+export function slugCommune(ville: string) {
+  return ville
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+export function communeParSlug(slug: string) {
+  return COMMUNES_COORDS.find((c) => slugCommune(c.ville) === slug);
+}
