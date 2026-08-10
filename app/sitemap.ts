@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { createClient } from '@/lib/supabase/server';
+import { COMMUNES_COORDS, slugCommune } from '@/lib/communes-reunion';
 
 const BASE_URL = 'https://annonce-auto.re';
 
@@ -16,11 +17,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: BASE_URL, changeFrequency: 'daily', priority: 1 },
     { url: `${BASE_URL}/comment-ca-marche`, changeFrequency: 'monthly', priority: 0.5 },
     { url: `${BASE_URL}/vendre-voiture-reunion`, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${BASE_URL}/acheter-voiture-reunion`, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${BASE_URL}/voiture-occasion`, changeFrequency: 'weekly', priority: 0.7 },
+    { url: `${BASE_URL}/qui-sommes-nous`, changeFrequency: 'yearly', priority: 0.3 },
     { url: `${BASE_URL}/contact`, changeFrequency: 'monthly', priority: 0.3 },
     { url: `${BASE_URL}/cgu`, changeFrequency: 'yearly', priority: 0.2 },
     { url: `${BASE_URL}/mentions-legales`, changeFrequency: 'yearly', priority: 0.2 },
     { url: `${BASE_URL}/politique-confidentialite`, changeFrequency: 'yearly', priority: 0.2 },
   ];
+
+  const pagesVilles: MetadataRoute.Sitemap = COMMUNES_COORDS.map((c) => ({
+    url: `${BASE_URL}/voiture-occasion/${slugCommune(c.ville)}`,
+    changeFrequency: 'weekly',
+    priority: 0.6,
+  }));
 
   const pagesAnnonces: MetadataRoute.Sitemap = (listings ?? []).map((l) => ({
     url: `${BASE_URL}/listing/${l.id}`,
@@ -29,5 +39,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  return [...pagesStatiques, ...pagesAnnonces];
+  return [...pagesStatiques, ...pagesVilles, ...pagesAnnonces];
 }
