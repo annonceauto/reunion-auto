@@ -254,3 +254,32 @@ drop policy if exists "Upload documents par utilisateurs connectés" on storage.
 create policy "Upload documents par utilisateurs connectés"
   on storage.objects for insert
   with check (bucket_id = 'documents' and auth.role() = 'authenticated');
+
+-- ============================================================
+-- MISE A JOUR : quota de 10 annonces gratuites pour les comptes professionnels
+-- ============================================================
+alter table profiles add column if not exists annonces_gratuites_restantes integer not null default 0;
+
+create or replace function public.attribuer_annonces_gratuites_pro()
+returns trigger
+language plpgsql
+as $$
+begin
+  if new.type_vendeur = 'professionnel' then
+    if tg_op = 'INSERT' then
+      new.annonces_gratuites_restantes := 10;
+    elsif tg_op = 'UPDATE'
+      and (old.type_vendeur is distinct from 'professionnel')
+      and old.annonces_gratuites_restantes = 0 then
+      new.annonces_gratuites_restantes := 10;
+    end if;
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists trg_attribuer_annonces_gratuites_pro on profiles;
+create trigger trg_attribuer_annonces_gratuites_pro
+  before insert or update on profiles
+  for each row
+  execute function public.attribuer_annonces_gratuites_pro();

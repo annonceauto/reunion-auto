@@ -93,6 +93,7 @@ function FormulaireCreerAnnonce() {
   const [estGratuite, setEstGratuite] = useState<boolean | null>(null);
   const [compteIllimite, setCompteIllimite] = useState(false);
   const [solde, setSolde] = useState(0);
+  const [annoncesGratuitesRestantes, setAnnoncesGratuitesRestantes] = useState(0);
 
   const dureesActuelles = typeVendeurCompte === 'professionnel' ? DUREES_PRO : DUREES;
 
@@ -130,14 +131,16 @@ function FormulaireCreerAnnonce() {
       }
       const { data: profil } = await supabase
         .from('profiles')
-        .select('annonce_gratuite_utilisee, solde, compte_illimite, type_vendeur, telephone')
+        .select('annonce_gratuite_utilisee, solde, compte_illimite, type_vendeur, telephone, annonces_gratuites_restantes')
         .eq('id', data.user.id)
         .single();
       setCompteIllimite(!!profil?.compte_illimite);
       setTypeVendeurCompte(profil?.type_vendeur === 'professionnel' ? 'professionnel' : 'particulier');
       setTelephoneCompte(profil?.telephone ?? '');
       const estPro = profil?.type_vendeur === 'professionnel';
-      setEstGratuite(profil?.compte_illimite ? true : estPro ? false : !profil?.annonce_gratuite_utilisee);
+      const restantesPro = profil?.annonces_gratuites_restantes ?? 0;
+      setAnnoncesGratuitesRestantes(restantesPro);
+      setEstGratuite(profil?.compte_illimite ? true : estPro ? restantesPro > 0 : !profil?.annonce_gratuite_utilisee);
       setSolde(profil?.solde ?? 0);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -215,7 +218,7 @@ function FormulaireCreerAnnonce() {
     try {
       const { data: profil } = await supabase
         .from('profiles')
-        .select('annonce_gratuite_utilisee, compte_illimite, type_vendeur, telephone')
+        .select('annonce_gratuite_utilisee, compte_illimite, type_vendeur, telephone, annonces_gratuites_restantes')
         .eq('id', userId)
         .single();
 
@@ -225,7 +228,8 @@ function FormulaireCreerAnnonce() {
 
       const compteIllimiteActuel = userData.user.email === EMAIL_ADMIN || !!profil?.compte_illimite;
       const estPro = profil?.type_vendeur === 'professionnel';
-      const estGratuiteActuelle = compteIllimiteActuel || (estPro ? false : !profil?.annonce_gratuite_utilisee);
+    const restantesProActuel = profil?.annonces_gratuites_restantes ?? 0;
+    const estGratuiteActuelle = compteIllimiteActuel || (estPro ? restantesProActuel > 0 : !profil?.annonce_gratuite_utilisee);
 
       // Protection anti-spam : pas plus de 5 annonces déposées par jour (sauf compte admin / illimité)
       if (!compteIllimiteActuel) {
@@ -376,11 +380,16 @@ function FormulaireCreerAnnonce() {
 
       if (estGratuiteActuelle) {
         if (!estPro) {
-          await supabase
-            .from('profiles')
-            .update({ annonce_gratuite_utilisee: true })
-            .eq('id', userId);
-        }
+        await supabase
+          .from('profiles')
+          .update({ annonce_gratuite_utilisee: true })
+          .eq('id', userId);
+      } else if (!compteIllimiteActuel) {
+        await supabase
+          .from('profiles')
+          .update({ annonces_gratuites_restantes: Math.max(0, restantesProActuel - 1) })
+          .eq('id', userId);
+      }
 
         if (boostSouhaite) {
           const reponseBoost = await fetch('/api/paiement-boost', {
@@ -454,8 +463,10 @@ function FormulaireCreerAnnonce() {
         <div className={`mt-6 rounded-xl border px-4 py-3 text-sm ${estGratuite ? 'border-lagon/30 bg-lagon/5 text-lagon' : 'border-fournaise/30 bg-fournaise/5 text-fournaise'}`}>
           {compteIllimite
             ? '🏢 Compte à accès illimité : dépôt gratuit, sans limite quotidienne.'
-            : typeVendeurCompte === 'professionnel'
-              ? `🏢 Compte professionnel : tarif pro applicable (7 € les 2 semaines, 10 € le mois). Solde disponible : ${solde.toFixed(2)} €.`
+            : typeVendeurCompte === 'professionnel' && estGratuite
+      ? ('Compte professionnel : il te reste ' + annoncesGratuitesRestantes + ' annonce(s) gratuite(s) sur 10. Cette annonce sera publiee gratuitement.')
+      : typeVendeurCompte === 'professionnel'
+      ? `🏢 Compte professionnel : tarif pro applicable (7 € les 2 semaines, 10 € le mois). Solde disponible : ${solde.toFixed(2)} €.`
               : estGratuite
                 ? "C'est ta première annonce : elle est gratuite et sera publiée immédiatement."
                 : `Ta première annonce gratuite a déjà été utilisée. Solde disponible : ${solde.toFixed(2)} €.`}
@@ -727,7 +738,7 @@ function FormulaireCreerAnnonce() {
           <label className="mb-2 block text-sm font-medium text-vanille">
             Durée de publication
             {estGratuite === true &&
-              (compteIllimite ? ' (compte à accès illimité)' : ' (offerte pour cette 1ère annonce)')}
+              (compteIllimite ? ' (compte à accès illimité)' : typeVendeurCompte === 'professionnel' ? ' (offerte - annonce gratuite pro)' : ' (offerte pour cette 1ère annonce)')}
           </label>
           <div className="grid grid-cols-2 gap-3">
             {dureesActuelles.map((d) => (
