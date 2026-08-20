@@ -69,10 +69,14 @@ const jsonLdOrganisation = {
   url: 'https://annonce-auto.re',
   description:
     "Site d'annonces de véhicules d'occasion à La Réunion, avec vidéo vérifiée pour chaque annonce.",
-  areaServed: {
+   areaServed: {
     '@type': 'AdministrativeArea',
     name: 'La Réunion',
   },
+  sameAs: [
+    'https://www.instagram.com/annonce_auto.re/',
+    'https://www.facebook.com/profile.php?id=61593048629729',
+  ],
 };
 
 const jsonLdSiteWeb = {
