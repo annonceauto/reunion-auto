@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import BoutonRetour from '@/components/BoutonRetour';
 import { COMMUNES_COORDS, slugCommune } from '@/lib/communes-reunion';
+import { jsonLdBreadcrumb } from '@/lib/breadcrumb';
 
 export const metadata: Metadata = {
   title: "Voiture d'occasion à La Réunion : toutes les communes",
@@ -10,9 +11,18 @@ export const metadata: Metadata = {
   alternates: { canonical: '/voiture-occasion' },
 };
 
+const jsonLd = jsonLdBreadcrumb([
+  { name: 'Accueil', url: 'https://annonce-auto.re' },
+  { name: "Voiture d'occasion à La Réunion", url: 'https://annonce-auto.re/voiture-occasion' },
+]);
+
 export default function VoitureOccasionParVille() {
   return (
     <div className="mx-auto max-w-3xl px-5 py-10 text-vanille/80">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <BoutonRetour />
       <h1 className="font-display text-2xl text-vanille">
         Voiture d&apos;occasion à La Réunion, par commune

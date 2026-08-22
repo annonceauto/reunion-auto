@@ -4,7 +4,8 @@ import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import ListingCard from '@/components/ListingCard';
 import BoutonRetour from '@/components/BoutonRetour';
-import { COMMUNES_COORDS, slugCommune, communeParSlug } from '@/lib/communes-reunion';
+import { COMMUNES_COORDS, slugCommune, communeParSlug, distanceKm } from '@/lib/communes-reunion';
+import { jsonLdBreadcrumb } from '@/lib/breadcrumb';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -46,10 +47,22 @@ export default async function VoitureOccasionCommune({
     .order('boost', { ascending: false })
     .order('created_at', { ascending: false });
 
-  const autresCommunes = COMMUNES_COORDS.filter((c) => c.ville !== commune.ville);
+  const communesProches = COMMUNES_COORDS.filter((c) => c.ville !== commune.ville)
+    .map((c) => ({ ...c, distance: distanceKm(commune.lat, commune.lng, c.lat, c.lng) }))
+    .sort((a, b) => a.distance - b.distance);
+
+  const jsonLd = jsonLdBreadcrumb([
+    { name: 'Accueil', url: 'https://annonce-auto.re' },
+    { name: "Voiture d'occasion à La Réunion", url: 'https://annonce-auto.re/voiture-occasion' },
+    { name: commune.ville, url: `https://annonce-auto.re/voiture-occasion/${params.commune}` },
+  ]);
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="mx-auto max-w-3xl text-vanille/80">
         <BoutonRetour />
         <h1 className="font-display text-2xl text-vanille sm:text-3xl">
@@ -57,8 +70,11 @@ export default async function VoitureOccasionCommune({
         </h1>
         <p className="mt-2 text-sm text-vanille/60">
           Annonces de véhicules d&apos;occasion publiées à {commune.ville} ({commune.cp}) et dans
-          les communes voisines de La Réunion. Chaque annonce peut inclure une courte vidéo du
-          véhicule, filmée par le vendeur, pour éviter les mauvaises surprises.
+          les communes voisines de La Réunion, dont {communesProches[0]?.ville} (à environ{' '}
+          {Math.round(communesProches[0]?.distance ?? 0)} km) et {communesProches[1]?.ville} (à
+          environ {Math.round(communesProches[1]?.distance ?? 0)} km). Chaque annonce peut inclure
+          une courte vidéo du véhicule, filmée par le vendeur, pour éviter les mauvaises
+          surprises.
         </p>
       </div>
 
@@ -109,12 +125,15 @@ export default async function VoitureOccasionCommune({
       </div>
 
       <div className="mx-auto mt-10 max-w-3xl">
-        <h2 className="font-display text-sm text-vanille/60">Autres communes de La Réunion</h2>
+        <h2 className="font-display text-sm text-vanille/60">
+          Communes voisines de {commune.ville}
+        </h2>
         <div className="mt-3 flex flex-wrap gap-2">
-          {autresCommunes.map((c) => (
+          {communesProches.map((c) => (
             <Link
               key={c.ville}
               href={`/voiture-occasion/${slugCommune(c.ville)}`}
+              title={`À environ ${Math.round(c.distance)} km de ${commune.ville}`}
               className="rounded-full border border-white/10 bg-basalte2 px-3 py-1.5 text-xs text-vanille/70 hover:border-lagon/50 hover:text-lagon"
             >
               {c.ville}

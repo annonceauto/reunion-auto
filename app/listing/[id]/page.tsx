@@ -8,6 +8,8 @@ import FavoriBouton from '@/components/FavoriBouton';
 import SignalerBouton from '@/components/SignalerBouton';
 import CompteurVues from '@/components/CompteurVues';
 import PartagerBouton from '@/components/PartagerBouton';
+import { slugCommune } from '@/lib/communes-reunion';
+import { jsonLdBreadcrumb } from '@/lib/breadcrumb';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -161,11 +163,25 @@ export default async function ListingDetail({ params }: { params: { id: string }
     uploadDate: listing.created_at,
     contentUrl: urlFichier('videos', s.path),
   }));
+  const jsonLdFilAriane = jsonLdBreadcrumb([
+    { name: 'Accueil', url: 'https://annonce-auto.re' },
+    { name: "Voiture d'occasion à La Réunion", url: 'https://annonce-auto.re/voiture-occasion' },
+    {
+      name: listing.commune,
+      url: `https://annonce-auto.re/voiture-occasion/${slugCommune(listing.commune)}`,
+    },
+    { name: `${listing.marque} ${listing.modele}`, url: `https://annonce-auto.re/listing/${listing.id}` },
+  ]);
+
   return (
     <div className="mx-auto max-w-4xl px-5 py-10">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdFilAriane) }}
       />
       {videosJsonLd.map((v, i) => (
         <script
