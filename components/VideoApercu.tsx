@@ -40,6 +40,8 @@ export default function VideoApercu() {
       muted
       loop
       playsInline
+      aria-hidden="true"
+      tabIndex={-1}
       className="absolute inset-0 h-full w-full object-cover"
       src={blobUrl}
     />

@@ -45,36 +45,48 @@ export default function CarteAcheterVendre({ nombreAnnonces }: { nombreAnnonces:
       {onglet === 'acheter' ? (
         <form onSubmit={rechercher} className="flex flex-col gap-3 p-5">
           <div className="grid grid-cols-2 gap-3">
-            <select
-              value={marque}
-              onChange={(e) => setMarque(e.target.value)}
-              className="rounded-xl border border-white/10 bg-basalte px-4 py-3 text-sm text-vanille"
-            >
-              <option value="">Marque</option>
-              {MARQUES.map((m) => (
-                <option key={m} value={m}>{m}</option>
-              ))}
-            </select>
-            <select
-              value={prixMax}
-              onChange={(e) => setPrixMax(e.target.value)}
-              className="rounded-xl border border-white/10 bg-basalte px-4 py-3 text-sm text-vanille"
-            >
-              <option value="">Prix max</option>
-              {[3000, 5000, 8000, 12000, 20000, 30000].map((p) => (
-                <option key={p} value={p}>{p.toLocaleString('fr-FR')} €</option>
-              ))}
-            </select>
+            <div>
+              <label htmlFor="carte-marque" className="sr-only">Marque</label>
+              <select
+                id="carte-marque"
+                value={marque}
+                onChange={(e) => setMarque(e.target.value)}
+                className="w-full rounded-xl border border-white/10 bg-basalte px-4 py-3 text-sm text-vanille"
+              >
+                <option value="">Marque</option>
+                {MARQUES.map((m) => (
+                  <option key={m} value={m}>{m}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label htmlFor="carte-prix-max" className="sr-only">Prix max</label>
+              <select
+                id="carte-prix-max"
+                value={prixMax}
+                onChange={(e) => setPrixMax(e.target.value)}
+                className="w-full rounded-xl border border-white/10 bg-basalte px-4 py-3 text-sm text-vanille"
+              >
+                <option value="">Prix max</option>
+                {[3000, 5000, 8000, 12000, 20000, 30000].map((p) => (
+                  <option key={p} value={p}>{p.toLocaleString('fr-FR')} €</option>
+                ))}
+              </select>
+            </div>
           </div>
-          <input
-            type="text"
-            inputMode="numeric"
-            placeholder="Code postal (ex : 97410)"
-            value={codePostal}
-            onChange={(e) => setCodePostal(e.target.value)}
-            maxLength={5}
-            className="rounded-xl border border-white/10 bg-basalte px-4 py-3 text-sm text-vanille placeholder:text-vanille/40"
-          />
+          <div>
+            <label htmlFor="carte-code-postal" className="sr-only">Code postal</label>
+            <input
+              id="carte-code-postal"
+              type="text"
+              inputMode="numeric"
+              placeholder="Code postal (ex : 97410)"
+              value={codePostal}
+              onChange={(e) => setCodePostal(e.target.value)}
+              maxLength={5}
+              className="w-full rounded-xl border border-white/10 bg-basalte px-4 py-3 text-sm text-vanille placeholder:text-vanille/40"
+            />
+          </div>
           <button
             type="submit"
             className="mt-1 rounded-full bg-lagon px-6 py-3 text-sm font-semibold text-basalte shadow-md shadow-lagon/20 hover:bg-lagon2"
