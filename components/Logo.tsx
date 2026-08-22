@@ -14,7 +14,7 @@ export default function Logo({ taille = 'normal' }: { taille?: 'normal' | 'grand
       />
       <span className={`font-display leading-none tracking-tight text-vanille ${tailleTexte}`}>
         ANNONCE<span className="text-lagon">AUTO</span>
-        <span className="text-vanille/40">.RE</span>
+        <span className="text-vanille/60">.RE</span>
       </span>
     </span>
   );
